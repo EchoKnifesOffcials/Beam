@@ -1,4 +1,3 @@
-// server.js
 const express = require('express');
 const cors = require('cors');
 const axios = require('axios');
@@ -7,21 +6,17 @@ const path = require('path');
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-// Middleware
 app.use(cors());
 app.use(express.json());
 app.use(express.static(path.join(__dirname, 'public')));
 
-// Roblox API endpoints
 const ROBLOX_USER_API = 'https://api.roblox.com/users/get-by-username';
 const ROBLOX_THUMBNAIL_API = 'https://thumbnails.roblox.com/v1/users/avatar-headshot';
 
-// Root endpoint - serve HTML
 app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
-// API: Get avatar by username
 app.get('/api/avatar/:username', async (req, res) => {
     try {
         const username = req.params.username;
@@ -78,7 +73,6 @@ app.get('/api/avatar/:username', async (req, res) => {
     }
 });
 
-// API: Get avatar by userId (direct)
 app.get('/api/avatar/id/:userId', async (req, res) => {
     try {
         const userId = req.params.userId;
@@ -123,14 +117,10 @@ app.get('/api/avatar/id/:userId', async (req, res) => {
     }
 });
 
-// Health check endpoint (required for Render)
 app.get('/health', (req, res) => {
     res.status(200).json({ status: 'OK', timestamp: new Date().toISOString() });
 });
 
-// Start server
-app.listen(PORT, () => {
+app.listen(PORT, '0.0.0.0', () => {
     console.log(`Server running on port ${PORT}`);
-    console.log(`Avatar API: /api/avatar/:username`);
-    console.log(`Avatar by ID: /api/avatar/id/:userId`);
 });
