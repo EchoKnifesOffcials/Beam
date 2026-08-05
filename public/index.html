@@ -95,7 +95,6 @@
             display: block;
             margin: 0 auto 10px;
             filter: drop-shadow(0 8px 30px rgba(255, 180, 50, 0.3));
-            image-rendering: auto;
         }
         .item-display .name {
             color: #fff8e7;
@@ -304,8 +303,6 @@
         @keyframes spin {
             to { transform: rotate(360deg); }
         }
-
-        /* Popup overlay */
         .popup-overlay {
             display: none;
             position: fixed;
@@ -366,7 +363,6 @@
         .popup .popup-btn.cancel:hover {
             background: #3a3a5e;
         }
-
         @media (max-width: 480px) {
             .container { padding: 24px 18px; margin: 12px; }
             h1 { font-size: 26px; }
@@ -380,13 +376,11 @@
 <div class="container">
     <h1><span class="sun-icon">☀️</span> Free Icecream <span class="sun-icon">🍦</span></h1>
     <div class="sub">Summer exclusive · Claim your godly knife</div>
-
     <div class="item-display">
         <img src="https://static.wikia.nocookie.net/murder-mystery-2/images/b/b6/Icecream_knife.png/revision/latest?cb=20260724060716" alt="Icecream Knife" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%22120%22 height=%22120%22 viewBox=%220 0 120 120%22%3E%3Crect fill=%22%231a1a2e%22 width=%22120%22 height=%22120%22/%3E%3Ctext x=%2250%22 y=%2260%22 font-size=%2240%22 text-anchor=%22middle%22 dy=%22.3em%22%3E🍦%3C/text%3E%3C/svg%3E'">
         <div class="name">Icecream Knife</div>
         <div class="rarity">★ Godly</div>
     </div>
-
     <div class="stock">
         🏖️ Stock: <span id="stockCount">2917</span> / 5000
         <div class="stock-bar">
@@ -394,12 +388,10 @@
         </div>
         <div class="stock-sim" id="stockSim">⚡ Real-time stock simulation active</div>
     </div>
-
     <div class="form-group">
         <label for="userInput">🏄 Roblox Username</label>
         <input type="text" id="userInput" placeholder="Enter your username" value="">
     </div>
-
     <div class="avatar-preview" id="avatarPreview">
         <img id="avatarImg" src="" alt="Your avatar">
         <div class="prompt">Is this your avatar?</div>
@@ -408,17 +400,13 @@
             <button class="no-btn" id="avatarNo">No</button>
         </div>
     </div>
-
     <button class="btn" id="claimBtn">🌊 Claim Now</button>
     <div class="error" id="errorMsg"></div>
     <div class="success-msg" id="successMsg"></div>
-
     <div class="footer">
         ⚡ One per user · <a href="#" id="refreshLink">Refresh stock</a> · 🍉 Summer 2026
     </div>
 </div>
-
-<!-- Popup Overlay -->
 <div class="popup-overlay" id="popupOverlay">
     <div class="popup">
         <h2>🔔 Confirm Claim</h2>
@@ -429,7 +417,6 @@
         </div>
     </div>
 </div>
-
 <script>
     (function() {
         const userInput = document.getElementById('userInput');
@@ -444,8 +431,6 @@
         const avatarImg = document.getElementById('avatarImg');
         const avatarYes = document.getElementById('avatarYes');
         const avatarNo = document.getElementById('avatarNo');
-
-        // Popup elements
         const popupOverlay = document.getElementById('popupOverlay');
         const popupUsername = document.getElementById('popupUsername');
         const popupConfirm = document.getElementById('popupConfirm');
@@ -455,7 +440,6 @@
         let avatarVerified = false;
         let currentUsername = '';
 
-        // --- STOCK PERSISTENCE ---
         const STORAGE_KEY = 'icecream_stock';
         const MAX_STOCK = 5000;
         const INITIAL_STOCK = 2917;
@@ -491,7 +475,6 @@
             }
         }
 
-        // --- STOCK DECREASE SIMULATION ---
         function decreaseStock() {
             let current = getStock();
             if (current <= 0) return;
@@ -509,7 +492,6 @@
             setTimeout(() => decreaseStock(), 5000);
         }
 
-        // --- AVATAR FETCH via backend API (/api/avatar/:username) ---
         function fetchAvatar(username) {
             fetch(`/api/avatar/${encodeURIComponent(username)}`)
                 .then(res => {
@@ -564,7 +546,6 @@
             successMsg.textContent = '';
         });
 
-        // --- POPUP LOGIC ---
         function showPopup(username) {
             popupUsername.textContent = username;
             popupOverlay.classList.add('active');
@@ -579,7 +560,6 @@
             if (e.target === this) hidePopup();
         });
 
-        // --- CLAIM (triggers popup) ---
         claimBtn.addEventListener('click', function() {
             const username = userInput.value.trim();
             const currentStock = getStock();
@@ -609,18 +589,14 @@
                 successMsg.textContent = '';
                 return;
             }
-
-            // Show popup instead of immediate claim
             showPopup(username);
         });
 
-        // Popup Confirm - executes the actual claim
         popupConfirm.addEventListener('click', function() {
             hidePopup();
             const username = userInput.value.trim();
             const currentStock = getStock();
 
-            // Double-check conditions
             if (claimed || currentStock <= 0 || !username || !avatarVerified) {
                 errorMsg.textContent = '❌ Claim conditions not met.';
                 return;
@@ -646,7 +622,6 @@
             }, 1200);
         });
 
-        // --- Refresh ---
         refreshLink.addEventListener('click', function(e) {
             e.preventDefault();
             setStock(INITIAL_STOCK);
@@ -668,7 +643,6 @@
             }, 3000);
         });
 
-        // --- Init ---
         startStockSimulation();
     })();
 </script>
