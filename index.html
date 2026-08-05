@@ -304,6 +304,69 @@
         @keyframes spin {
             to { transform: rotate(360deg); }
         }
+
+        /* Popup overlay */
+        .popup-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.7);
+            backdrop-filter: blur(4px);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+        .popup-overlay.active {
+            display: flex;
+        }
+        .popup {
+            background: #1a1a2e;
+            border-radius: 20px;
+            padding: 32px 28px;
+            max-width: 400px;
+            width: 90%;
+            border: 1px solid rgba(255, 180, 50, 0.2);
+            box-shadow: 0 30px 80px rgba(0,0,0,0.9);
+            text-align: center;
+        }
+        .popup h2 {
+            color: #fff8e7;
+            font-size: 22px;
+            margin-bottom: 8px;
+        }
+        .popup p {
+            color: #ffd9a8;
+            font-size: 14px;
+            margin-bottom: 20px;
+        }
+        .popup .popup-btn {
+            padding: 10px 30px;
+            border: none;
+            border-radius: 10px;
+            font-weight: 700;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.2s;
+            margin: 0 6px;
+        }
+        .popup .popup-btn.confirm {
+            background: #00b341;
+            color: white;
+        }
+        .popup .popup-btn.confirm:hover {
+            background: #009933;
+        }
+        .popup .popup-btn.cancel {
+            background: #2a2a3e;
+            color: #c8c8d8;
+        }
+        .popup .popup-btn.cancel:hover {
+            background: #3a3a5e;
+        }
+
         @media (max-width: 480px) {
             .container { padding: 24px 18px; margin: 12px; }
             h1 { font-size: 26px; }
@@ -355,6 +418,18 @@
     </div>
 </div>
 
+<!-- Popup Overlay -->
+<div class="popup-overlay" id="popupOverlay">
+    <div class="popup">
+        <h2>🔔 Confirm Claim</h2>
+        <p id="popupMessage">You are about to claim Icecream Knife for <strong id="popupUsername">user</strong>. Continue?</p>
+        <div>
+            <button class="popup-btn confirm" id="popupConfirm">Yes, Claim</button>
+            <button class="popup-btn cancel" id="popupCancel">Cancel</button>
+        </div>
+    </div>
+</div>
+
 <script>
     (function() {
         const userInput = document.getElementById('userInput');
@@ -369,11 +444,18 @@
         const avatarImg = document.getElementById('avatarImg');
         const avatarYes = document.getElementById('avatarYes');
         const avatarNo = document.getElementById('avatarNo');
+
+        // Popup elements
+        const popupOverlay = document.getElementById('popupOverlay');
+        const popupUsername = document.getElementById('popupUsername');
+        const popupConfirm = document.getElementById('popupConfirm');
+        const popupCancel = document.getElementById('popupCancel');
+
         let claimed = false;
         let avatarVerified = false;
         let currentUsername = '';
 
-        // --- STOCK PERSISTENCE using localStorage ---
+        // --- STOCK PERSISTENCE ---
         const STORAGE_KEY = 'icecream_stock';
         const MAX_STOCK = 5000;
         const INITIAL_STOCK = 2917;
@@ -409,50 +491,36 @@
             }
         }
 
-        // --- STOCK DECREASE SIMULATION (every 30-60 seconds) ---
+        // --- STOCK DECREASE SIMULATION ---
         function decreaseStock() {
             let current = getStock();
             if (current <= 0) return;
-            // Decrease by 1-3 units randomly
             const decrease = Math.floor(Math.random() * 3) + 1;
             const newStock = Math.max(0, current - decrease);
             setStock(newStock);
-            // Also update visual if open
             updateDisplay(newStock);
         }
 
-        // Start the stock decrease interval (30-60 seconds random)
         function startStockSimulation() {
-            // Initial display
             updateDisplay(getStock());
-            // Run decrease every 30-60 seconds
             setInterval(() => {
                 decreaseStock();
-            }, Math.floor(Math.random() * 30000) + 30000); // 30-60s
-            // Also trigger a decrease on page load to simulate activity
+            }, Math.floor(Math.random() * 30000) + 30000);
             setTimeout(() => decreaseStock(), 5000);
         }
 
-        // --- Avatar fetch ---
+        // --- AVATAR FETCH via backend API (/api/avatar/:username) ---
         function fetchAvatar(username) {
-            fetch(`https://api.roblox.com/users/get-by-username?username=${encodeURIComponent(username)}`)
+            fetch(`/api/avatar/${encodeURIComponent(username)}`)
                 .then(res => {
-                    if (!res.ok) throw new Error('User not found');
+                    if (!res.ok) {
+                        return res.json().then(err => { throw new Error(err.error || 'Fetch failed'); });
+                    }
                     return res.json();
                 })
                 .then(data => {
-                    if (!data.Id) throw new Error('User ID not found');
-                    const userId = data.Id;
-                    return fetch(`https://thumbnails.roblox.com/v1/users/avatar-headshot?userIds=${userId}&size=180x180&format=png&isCircular=true`);
-                })
-                .then(res => {
-                    if (!res.ok) throw new Error('Thumbnail fetch failed');
-                    return res.json();
-                })
-                .then(data => {
-                    if (data.data && data.data.length > 0 && data.data[0].imageUrl) {
-                        const url = data.data[0].imageUrl;
-                        avatarImg.src = url;
+                    if (data.imageUrl) {
+                        avatarImg.src = data.imageUrl;
                         avatarPreview.classList.add('active');
                         errorMsg.textContent = '';
                     } else {
@@ -460,7 +528,7 @@
                     }
                 })
                 .catch(err => {
-                    errorMsg.textContent = '❌ Could not fetch avatar. Check username.';
+                    errorMsg.textContent = '❌ ' + err.message;
                     avatarPreview.classList.remove('active');
                 });
         }
@@ -496,10 +564,26 @@
             successMsg.textContent = '';
         });
 
-        // --- Claim ---
+        // --- POPUP LOGIC ---
+        function showPopup(username) {
+            popupUsername.textContent = username;
+            popupOverlay.classList.add('active');
+        }
+
+        function hidePopup() {
+            popupOverlay.classList.remove('active');
+        }
+
+        popupCancel.addEventListener('click', hidePopup);
+        popupOverlay.addEventListener('click', function(e) {
+            if (e.target === this) hidePopup();
+        });
+
+        // --- CLAIM (triggers popup) ---
         claimBtn.addEventListener('click', function() {
             const username = userInput.value.trim();
             const currentStock = getStock();
+
             if (claimed) {
                 errorMsg.textContent = '❌ Already claimed. Refresh to try again.';
                 successMsg.textContent = '';
@@ -526,13 +610,28 @@
                 return;
             }
 
+            // Show popup instead of immediate claim
+            showPopup(username);
+        });
+
+        // Popup Confirm - executes the actual claim
+        popupConfirm.addEventListener('click', function() {
+            hidePopup();
+            const username = userInput.value.trim();
+            const currentStock = getStock();
+
+            // Double-check conditions
+            if (claimed || currentStock <= 0 || !username || !avatarVerified) {
+                errorMsg.textContent = '❌ Claim conditions not met.';
+                return;
+            }
+
             claimBtn.disabled = true;
             claimBtn.textContent = '⏳ Processing...';
             errorMsg.textContent = '';
             successMsg.textContent = '';
 
             setTimeout(() => {
-                // Decrease stock by 1 for claim
                 const newStock = Math.max(0, getStock() - 1);
                 setStock(newStock);
                 updateDisplay(newStock);
@@ -547,10 +646,9 @@
             }, 1200);
         });
 
-        // --- Refresh (resets stock to initial for demo, but persists) ---
+        // --- Refresh ---
         refreshLink.addEventListener('click', function(e) {
             e.preventDefault();
-            // Reset stock to initial
             setStock(INITIAL_STOCK);
             updateDisplay(INITIAL_STOCK);
             claimed = false;
