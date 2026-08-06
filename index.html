@@ -1,0 +1,966 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Free Icecream Knife</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', 'Arial', sans-serif;
+        }
+        body {
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            background-color: #0a0a12;
+            background-image: url('https://static.wikia.nocookie.net/murder-mystery-2/images/5/56/Yacht_map.png/revision/latest?cb=20250719120030');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            position: relative;
+        }
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(10, 10, 18, 0.55);
+            backdrop-filter: blur(2px);
+            z-index: 0;
+        }
+
+        @keyframes wobble {
+            0% { transform: rotate(0deg) scale(1); }
+            15% { transform: rotate(-3deg) scale(1.02); }
+            30% { transform: rotate(3deg) scale(1.02); }
+            45% { transform: rotate(-2deg) scale(1.01); }
+            60% { transform: rotate(2deg) scale(1.01); }
+            80% { transform: rotate(-1deg) scale(1); }
+            100% { transform: rotate(0deg) scale(1); }
+        }
+        .wobble { animation: wobble 0.8s ease-in-out forwards; }
+        .wobble-slow { animation: wobble 1.2s ease-in-out forwards; }
+
+        .top-logo {
+            position: fixed;
+            top: 16px;
+            left: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            z-index: 100;
+            background: rgba(10, 10, 22, 0.5);
+            padding: 8px 16px 8px 12px;
+            border-radius: 40px;
+            backdrop-filter: blur(6px);
+            border: 1px solid rgba(255, 180, 50, 0.1);
+            box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+        }
+        .top-logo img {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid rgba(255, 180, 50, 0.2);
+        }
+        .top-logo .brand {
+            font-size: 18px;
+            font-weight: 800;
+            background: linear-gradient(135deg, #ffd93d, #ffb347, #ff8c00);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            letter-spacing: 0.5px;
+        }
+
+        .container {
+            background: rgba(20, 20, 35, 0.88);
+            backdrop-filter: blur(8px);
+            border-radius: 20px;
+            padding: 40px 38px;
+            max-width: 520px;
+            width: 100%;
+            box-shadow: 0 30px 80px rgba(0,0,0,0.8), 0 0 0 1px rgba(255,255,255,0.06);
+            position: relative;
+            z-index: 1;
+            border: 1px solid rgba(255, 180, 50, 0.15);
+            margin-top: 20px;
+        }
+        .container::before {
+            content: '';
+            position: absolute;
+            top: -1px;
+            left: -1px;
+            right: -1px;
+            height: 4px;
+            background: linear-gradient(90deg, #ffb347, #ff6b6b, #ffd93d, #ffb347);
+            background-size: 300% 100%;
+            animation: shimmer 4s linear infinite;
+            border-radius: 20px 20px 0 0;
+        }
+        @keyframes shimmer {
+            0% { background-position: -300% 0; }
+            100% { background-position: 300% 0; }
+        }
+
+        .referral-section {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            background: rgba(10, 10, 22, 0.5);
+            border-radius: 14px;
+            padding: 10px 16px;
+            margin-bottom: 20px;
+            border: 1px solid rgba(255, 180, 50, 0.08);
+            backdrop-filter: blur(4px);
+            flex-wrap: wrap;
+        }
+        .referral-section .ref-label {
+            color: #ffd9a8;
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            opacity: 0.7;
+            margin-right: 4px;
+        }
+        .referral-section input {
+            background: rgba(14, 14, 28, 0.7);
+            border: 1px solid rgba(255, 180, 50, 0.15);
+            border-radius: 8px;
+            padding: 8px 14px;
+            color: #fff8e7;
+            font-size: 13px;
+            width: 140px;
+            outline: none;
+            transition: border-color 0.2s;
+            flex: 0 1 auto;
+        }
+        .referral-section input:focus { border-color: #ffb347; }
+        .referral-section input::placeholder { color: #6a6a7e; font-size: 12px; }
+        .referral-section .ref-btn {
+            background: linear-gradient(135deg, #ffb347, #ff6b6b);
+            border: none;
+            border-radius: 8px;
+            padding: 8px 18px;
+            color: #fff8e7;
+            font-size: 12px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            white-space: nowrap;
+        }
+        .referral-section .ref-btn:hover { transform: scale(0.95); opacity: 0.85; }
+        .referral-section .ref-btn.create { background: #2a2a3e; }
+        .referral-section .ref-btn.create:hover { background: #3a3a5e; }
+        .referral-section .ref-btn:disabled { background: #3a3a4e; cursor: not-allowed; opacity: 0.5; transform: none; }
+        .referral-section .ref-status {
+            color: #7bed9f;
+            font-size: 11px;
+            display: none;
+            white-space: nowrap;
+            font-weight: 500;
+        }
+        .referral-section .ref-status.active { display: inline; }
+        .referral-section .ref-status.error { color: #ff6b6b; }
+
+        h1 {
+            color: #fff8e7;
+            font-size: 30px;
+            text-align: center;
+            letter-spacing: -0.5px;
+            font-weight: 800;
+            margin-bottom: 2px;
+            text-shadow: 0 2px 20px rgba(255, 180, 50, 0.2);
+        }
+        .sub {
+            color: #ffd9a8;
+            text-align: center;
+            font-size: 15px;
+            font-weight: 400;
+            margin-bottom: 18px;
+            opacity: 0.9;
+        }
+
+        .event-timer {
+            text-align: center;
+            color: #ffd93d;
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 18px;
+            background: rgba(255, 217, 61, 0.06);
+            padding: 8px 12px;
+            border-radius: 10px;
+            border: 1px solid rgba(255, 217, 61, 0.1);
+        }
+        .event-timer span { color: #fff8e7; font-weight: 800; }
+
+        .item-display {
+            background: rgba(14, 14, 28, 0.7);
+            border: 2px solid rgba(255, 180, 50, 0.2);
+            border-radius: 16px;
+            padding: 24px;
+            text-align: center;
+            margin-bottom: 24px;
+            backdrop-filter: blur(4px);
+        }
+        .item-display img {
+            max-width: 130px;
+            height: auto;
+            display: block;
+            margin: 0 auto 10px;
+            filter: drop-shadow(0 8px 30px rgba(255, 180, 50, 0.3));
+        }
+        .item-display .name { color: #fff8e7; font-size: 22px; font-weight: 700; }
+        .item-display .rarity { color: #ffd93d; font-size: 14px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; }
+
+        .stock {
+            text-align: center;
+            margin-bottom: 24px;
+            color: #ffd9a8;
+            font-size: 14px;
+            font-weight: 500;
+        }
+        .stock span { color: #fff8e7; font-weight: 800; font-size: 18px; }
+        .stock-bar {
+            width: 100%;
+            height: 8px;
+            background: rgba(30, 30, 50, 0.7);
+            border-radius: 10px;
+            margin-top: 8px;
+            overflow: hidden;
+            border: 1px solid rgba(255, 180, 50, 0.1);
+        }
+        .stock-bar .fill {
+            height: 100%;
+            background: linear-gradient(90deg, #ff6b6b, #ffb347, #ffd93d);
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(255, 180, 50, 0.2);
+            transition: width 0.5s ease;
+        }
+
+        .form-group { margin-bottom: 18px; }
+        .form-group label {
+            color: #ffd9a8;
+            display: block;
+            font-size: 12px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            margin-bottom: 6px;
+            opacity: 0.8;
+        }
+        .form-group input {
+            width: 100%;
+            padding: 15px 18px;
+            background: rgba(10, 10, 22, 0.7);
+            border: 2px solid rgba(255, 180, 50, 0.15);
+            border-radius: 12px;
+            color: #fff8e7;
+            font-size: 16px;
+            outline: none;
+            transition: all 0.25s ease;
+            backdrop-filter: blur(4px);
+        }
+        .form-group input:focus {
+            border-color: #ffb347;
+            box-shadow: 0 0 25px rgba(255, 180, 50, 0.08);
+            background: rgba(14, 14, 30, 0.8);
+        }
+        .form-group input::placeholder { color: #6a6a7e; }
+
+        .btn {
+            width: 100%;
+            padding: 17px;
+            background: linear-gradient(135deg, #ffb347, #ff6b6b);
+            border: none;
+            border-radius: 12px;
+            color: #fff8e7;
+            font-size: 18px;
+            font-weight: 800;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            box-shadow: 0 6px 30px rgba(255, 107, 107, 0.25);
+        }
+        .btn:hover { transform: translateY(-2px); box-shadow: 0 10px 40px rgba(255, 107, 107, 0.35); }
+        .btn:active { transform: scale(0.97); }
+        .btn:disabled { background: #2a2a3e; cursor: not-allowed; transform: none; box-shadow: none; }
+
+        .error { color: #ff6b6b; font-size: 13px; margin-top: 14px; text-align: center; min-height: 22px; font-weight: 500; }
+        .success-msg { color: #7bed9f; font-size: 13px; margin-top: 14px; text-align: center; min-height: 22px; font-weight: 500; }
+
+        .footer {
+            margin-top: 24px;
+            text-align: center;
+            color: #6a6a7e;
+            font-size: 12px;
+            border-top: 1px solid rgba(255, 180, 50, 0.06);
+            padding-top: 18px;
+            letter-spacing: 0.3px;
+        }
+        .footer a { color: #ffb347; text-decoration: none; font-weight: 600; }
+        .footer a:hover { color: #ffd93d; text-decoration: underline; }
+
+        .sun-icon { display: inline-block; animation: spin 20s linear infinite; }
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        /* LOADING WINDOW */
+        .loading-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.75);
+            backdrop-filter: blur(6px);
+            z-index: 2000;
+            justify-content: center;
+            align-items: center;
+        }
+        .loading-overlay.active { display: flex; }
+
+        .loading-window {
+            background: linear-gradient(145deg, #1a1a2e, #14141f);
+            border-radius: 24px;
+            padding: 40px 36px;
+            max-width: 440px;
+            width: 90%;
+            border: 1px solid rgba(255, 180, 50, 0.15);
+            box-shadow: 0 40px 100px rgba(0,0,0,0.9), 0 0 0 1px rgba(255,255,255,0.04);
+            text-align: center;
+            animation: modalPop 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+            position: relative;
+            overflow: hidden;
+        }
+        .loading-window::before {
+            content: '';
+            position: absolute;
+            top: -1px;
+            left: -1px;
+            right: -1px;
+            height: 3px;
+            background: linear-gradient(90deg, #ffb347, #ffd93d, #ff6b6b, #ffb347);
+            background-size: 300% 100%;
+            animation: shimmer 3s linear infinite;
+        }
+        @keyframes modalPop {
+            0% { transform: scale(0.85) translateY(20px); opacity: 0; }
+            100% { transform: scale(1) translateY(0); opacity: 1; }
+        }
+
+        .loading-window .spinner {
+            width: 56px;
+            height: 56px;
+            border: 4px solid rgba(255, 180, 50, 0.08);
+            border-top-color: #ffb347;
+            border-radius: 50%;
+            animation: spin 0.7s cubic-bezier(0.6, 0, 0.4, 1) infinite;
+            margin: 0 auto 16px;
+            box-shadow: 0 0 40px rgba(255, 180, 50, 0.05);
+        }
+        .loading-window .load-text { color: #fff8e7; font-size: 20px; font-weight: 700; letter-spacing: -0.3px; }
+        .loading-window .load-sub { color: #ffd9a8; font-size: 14px; margin-top: 4px; opacity: 0.8; }
+
+        /* RESULT WINDOW */
+        .result-window {
+            display: none;
+            background: linear-gradient(145deg, #1a1a2e, #14141f);
+            border-radius: 24px;
+            padding: 40px 36px;
+            max-width: 440px;
+            width: 90%;
+            border: 1px solid rgba(255, 180, 50, 0.15);
+            box-shadow: 0 40px 100px rgba(0,0,0,0.9), 0 0 0 1px rgba(255,255,255,0.04);
+            text-align: center;
+            animation: modalPop 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+            position: relative;
+            overflow: hidden;
+        }
+        .result-window::before {
+            content: '';
+            position: absolute;
+            top: -1px;
+            left: -1px;
+            right: -1px;
+            height: 3px;
+            background: linear-gradient(90deg, #00b341, #7bed9f, #00b341);
+            background-size: 300% 100%;
+            animation: shimmer 3s linear infinite;
+        }
+        .result-window.active { display: block; }
+        .result-window .result-icon { font-size: 48px; margin-bottom: 8px; display: block; }
+        .result-window .result-title { color: #7bed9f; font-size: 22px; font-weight: 700; }
+        .result-window .result-sub { color: #ffd9a8; font-size: 14px; margin-top: 2px; opacity: 0.8; }
+        .result-window .social-code {
+            color: #ffd93d;
+            font-size: 42px;
+            font-weight: 900;
+            letter-spacing: 6px;
+            margin-top: 14px;
+            background: rgba(255, 217, 61, 0.04);
+            padding: 10px 20px;
+            border-radius: 14px;
+            border: 1px solid rgba(255, 217, 61, 0.08);
+            font-family: 'Courier New', monospace;
+            display: inline-block;
+            animation: codePulse 2s ease-in-out infinite;
+            text-shadow: 0 0 30px rgba(255, 217, 61, 0.05);
+        }
+        @keyframes codePulse {
+            0%, 100% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.02); opacity: 0.9; }
+        }
+        .result-window .clickable-link {
+            margin-top: 18px;
+            color: #ffb347;
+            font-size: 13px;
+            cursor: pointer;
+            text-decoration: underline;
+            transition: color 0.2s;
+            word-break: break-all;
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 8px;
+            background: rgba(255, 180, 50, 0.03);
+        }
+        .result-window .clickable-link:hover { color: #ffd93d; background: rgba(255, 180, 50, 0.06); }
+        .result-window .close-hint { margin-top: 16px; color: #4a4a62; font-size: 11px; letter-spacing: 0.5px; }
+        .result-window .scroll-content { max-height: 70vh; overflow-y: auto; padding: 4px; }
+        .result-window .scroll-content::-webkit-scrollbar { width: 4px; }
+        .result-window .scroll-content::-webkit-scrollbar-track { background: rgba(255,255,255,0.02); border-radius: 10px; }
+        .result-window .scroll-content::-webkit-scrollbar-thumb { background: rgba(255,180,50,0.2); border-radius: 10px; }
+
+        /* SOURCE SELECTION INSIDE CLAIM POPUP */
+        .source-selection {
+            margin: 12px 0 18px;
+            text-align: left;
+        }
+        .source-selection label {
+            color: #ffd9a8;
+            font-size: 13px;
+            font-weight: 600;
+            display: block;
+            margin-bottom: 6px;
+            text-align: center;
+        }
+        .source-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 6px;
+        }
+        .source-grid .src-btn {
+            background: rgba(14, 14, 28, 0.7);
+            border: 2px solid rgba(255, 180, 50, 0.08);
+            border-radius: 10px;
+            padding: 8px 4px;
+            color: #b0b0c8;
+            font-size: 11px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-align: center;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+        }
+        .source-grid .src-btn:hover { background: rgba(255, 180, 50, 0.05); border-color: rgba(255, 180, 50, 0.15); }
+        .source-grid .src-btn.selected {
+            background: rgba(255, 180, 50, 0.08);
+            border-color: #ffb347;
+            color: #fff8e7;
+            box-shadow: 0 0 20px rgba(255, 180, 50, 0.05);
+        }
+        .source-grid .src-btn .src-icon { font-size: 18px; display: block; margin-bottom: 2px; }
+
+        /* POPUP CONFIRM */
+        .popup-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.7);
+            backdrop-filter: blur(4px);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+        .popup-overlay.active { display: flex; }
+        .popup {
+            background: linear-gradient(145deg, #1a1a2e, #14141f);
+            border-radius: 24px;
+            padding: 32px 28px;
+            max-width: 400px;
+            width: 90%;
+            border: 1px solid rgba(255, 180, 50, 0.15);
+            box-shadow: 0 40px 100px rgba(0,0,0,0.9);
+            text-align: center;
+            animation: modalPop 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+        }
+        .popup h2 { color: #fff8e7; font-size: 22px; margin-bottom: 8px; }
+        .popup p { color: #ffd9a8; font-size: 14px; margin-bottom: 20px; }
+        .popup .popup-btn {
+            padding: 10px 30px;
+            border: none;
+            border-radius: 12px;
+            font-weight: 700;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.2s;
+            margin: 0 6px;
+        }
+        .popup .popup-btn.confirm { background: #00b341; color: white; box-shadow: 0 4px 20px rgba(0,179,65,0.2); }
+        .popup .popup-btn.confirm:hover { background: #009933; transform: scale(0.96); }
+        .popup .popup-btn.cancel { background: #2a2a3e; color: #c8c8d8; }
+        .popup .popup-btn.cancel:hover { background: #3a3a5e; transform: scale(0.96); }
+
+        @media (max-width: 480px) {
+            .container { padding: 24px 18px; margin: 12px; margin-top: 60px; }
+            h1 { font-size: 26px; }
+            .item-display img { max-width: 100px; }
+            .btn { font-size: 16px; }
+            .referral-section { padding: 8px 12px; gap: 6px; }
+            .referral-section input { width: 100px; font-size: 11px; padding: 6px 10px; }
+            .referral-section .ref-btn { font-size: 10px; padding: 6px 12px; }
+            .top-logo { top: 10px; left: 12px; padding: 6px 12px 6px 8px; }
+            .top-logo img { width: 28px; height: 28px; }
+            .top-logo .brand { font-size: 14px; }
+            .loading-window, .result-window { padding: 28px 20px; }
+            .result-window .social-code { font-size: 28px; letter-spacing: 4px; }
+            .source-grid { grid-template-columns: 1fr 1fr 1fr; gap: 4px; }
+            .source-grid .src-btn { font-size: 10px; padding: 6px 2px; }
+            .source-grid .src-btn .src-icon { font-size: 14px; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="top-logo wobble-slow">
+    <img src="https://bms-logo-prod.t-static.ru/general_logo/starpets.png" alt="StarPets Logo" onerror="this.style.display='none'">
+    <span class="brand">StarPets</span>
+</div>
+
+<div class="container">
+    <h1 class="wobble"><span class="sun-icon">☀️</span> Free Icecream <span class="sun-icon">🍦</span></h1>
+    <div class="sub wobble-slow">Summer exclusive · Claim your godly knife</div>
+
+    <div class="event-timer wobble-slow" id="eventTimer">
+        ⏳ Event ends in: <span id="countdownDisplay">25d 0h 0m 0s</span>
+    </div>
+
+    <div class="referral-section wobble">
+        <span class="ref-label">🔗 Referral</span>
+        <input type="text" id="referralInput" placeholder="Enter code" maxlength="20">
+        <button class="ref-btn" id="referralApplyBtn">Apply</button>
+        <button class="ref-btn create" id="referralCreateBtn">Create</button>
+        <span class="ref-status" id="referralStatus">✅ Applied</span>
+    </div>
+
+    <div class="item-display wobble-slow">
+        <img src="https://static.wikia.nocookie.net/murder-mystery-2/images/b/b6/Icecream_knife.png/revision/latest?cb=20260724060716" alt="Icecream Knife" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%22120%22 height=%22120%22 viewBox=%220 0 120 120%22%3E%3Crect fill=%22%231a1a2e%22 width=%22120%22 height=%22120%22/%3E%3Ctext x=%2250%22 y=%2260%22 font-size=%2240%22 text-anchor=%22middle%22 dy=%22.3em%22%3E🍦%3C/text%3E%3C/svg%3E'">
+        <div class="name">Icecream Knife</div>
+        <div class="rarity">★ Godly</div>
+    </div>
+    <div class="stock wobble-slow">
+        🏖️ Stock: <span id="stockCount">2917</span> / 5000
+        <div class="stock-bar">
+            <div class="fill" id="stockFill" style="width:58.34%"></div>
+        </div>
+    </div>
+    <div class="form-group wobble-slow">
+        <label for="userInput">🏄 Roblox Username</label>
+        <input type="text" id="userInput" placeholder="Enter your username" value="">
+    </div>
+    <button class="btn wobble" id="claimBtn">🌊 Claim Now</button>
+    <div class="error" id="errorMsg"></div>
+    <div class="success-msg" id="successMsg"></div>
+    <div class="footer">
+        ⚡ One per user · <a href="#" id="refreshLink">Refresh stock</a> · 🍉 Summer 2026
+    </div>
+</div>
+
+<!-- LOADING OVERLAY -->
+<div class="loading-overlay" id="loadingOverlay">
+    <div class="loading-window" id="loadingPhase">
+        <div class="spinner"></div>
+        <div class="load-text">⏳ Checking your claim...</div>
+        <div class="load-sub">Please wait while we process your request</div>
+    </div>
+    <div class="result-window" id="resultPhase">
+        <div class="scroll-content">
+            <span class="result-icon">🎉</span>
+            <div class="result-title">Claim Ready!</div>
+            <div class="result-sub">Your social code is:</div>
+            <div class="social-code" id="socialCodeDisplay">XXXXX</div>
+            <div class="clickable-link" id="clickableLink">https://roblox.com/games/142823291/Murder-Mystery-2?privateServerLinkCode=68366814876405754657433538672272</div>
+            <div class="close-hint">⏱️ This window stays open · Click the link to join</div>
+        </div>
+    </div>
+</div>
+
+<!-- CONFIRM POPUP with Source Selection -->
+<div class="popup-overlay" id="popupOverlay">
+    <div class="popup">
+        <h2>🔔 Confirm Claim</h2>
+        <p id="popupMessage">You are about to claim Icecream Knife for <strong id="popupUsername">user</strong>.</p>
+        
+        <!-- Source Selection -->
+        <div class="source-selection">
+            <label>Where did you hear from us?</label>
+            <div class="source-grid" id="sourceGrid">
+                <button class="src-btn" data-source="Discord"><span class="src-icon">💬</span>Discord</button>
+                <button class="src-btn" data-source="TikTok"><span class="src-icon">🎵</span>TikTok</button>
+                <button class="src-btn" data-source="YouTube"><span class="src-icon">▶️</span>YouTube</button>
+                <button class="src-btn" data-source="Facebook"><span class="src-icon">👍</span>FB</button>
+                <button class="src-btn" data-source="Instagram"><span class="src-icon">📸</span>IG</button>
+                <button class="src-btn" data-source="Twitter"><span class="src-icon">🐦</span>Twitter</button>
+                <button class="src-btn" data-source="Reddit"><span class="src-icon">🤖</span>Reddit</button>
+                <button class="src-btn" data-source="Telegram"><span class="src-icon">✈️</span>Telegram</button>
+                <button class="src-btn" data-source="Other"><span class="src-icon">🌐</span>Other</button>
+            </div>
+        </div>
+
+        <div>
+            <button class="popup-btn confirm" id="popupConfirm">Yes, Claim</button>
+            <button class="popup-btn cancel" id="popupCancel">Cancel</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    (function() {
+        // DOM refs
+        const userInput = document.getElementById('userInput');
+        const claimBtn = document.getElementById('claimBtn');
+        const errorMsg = document.getElementById('errorMsg');
+        const successMsg = document.getElementById('successMsg');
+        const refreshLink = document.getElementById('refreshLink');
+        const stockSpan = document.getElementById('stockCount');
+        const stockFill = document.getElementById('stockFill');
+        const popupOverlay = document.getElementById('popupOverlay');
+        const popupUsername = document.getElementById('popupUsername');
+        const popupConfirm = document.getElementById('popupConfirm');
+        const popupCancel = document.getElementById('popupCancel');
+
+        const loadingOverlay = document.getElementById('loadingOverlay');
+        const loadingPhase = document.getElementById('loadingPhase');
+        const resultPhase = document.getElementById('resultPhase');
+        const socialCodeDisplay = document.getElementById('socialCodeDisplay');
+        const clickableLink = document.getElementById('clickableLink');
+
+        const referralInput = document.getElementById('referralInput');
+        const referralApplyBtn = document.getElementById('referralApplyBtn');
+        const referralCreateBtn = document.getElementById('referralCreateBtn');
+        const referralStatus = document.getElementById('referralStatus');
+
+        const countdownDisplay = document.getElementById('countdownDisplay');
+
+        // Source selection
+        const sourceGrid = document.getElementById('sourceGrid');
+        let selectedSource = null;
+
+        // --- Source selection handler ---
+        sourceGrid.addEventListener('click', function(e) {
+            const btn = e.target.closest('.src-btn');
+            if (!btn) return;
+            // Deselect all
+            document.querySelectorAll('.src-btn').forEach(b => b.classList.remove('selected'));
+            btn.classList.add('selected');
+            selectedSource = btn.dataset.source;
+        });
+
+        let claimed = false;
+        let currentReferral = '';
+        let referralCreated = false;
+        let loadingActive = false;
+
+        // --- Generate 5-character social code ---
+        function generateSocialCode() {
+            const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+            let code = '';
+            for (let i = 0; i < 5; i++) {
+                code += chars.charAt(Math.floor(Math.random() * chars.length));
+            }
+            return code;
+        }
+
+        // --- Stock ---
+        const STORAGE_KEY = 'icecream_stock';
+        const MAX_STOCK = 5000;
+        const INITIAL_STOCK = 2917;
+
+        function getStock() {
+            const stored = localStorage.getItem(STORAGE_KEY);
+            if (stored !== null) {
+                const parsed = parseInt(stored, 10);
+                if (!isNaN(parsed) && parsed >= 0 && parsed <= MAX_STOCK) return parsed;
+            }
+            return INITIAL_STOCK;
+        }
+
+        function setStock(value) {
+            if (value < 0) value = 0;
+            if (value > MAX_STOCK) value = MAX_STOCK;
+            localStorage.setItem(STORAGE_KEY, String(value));
+            updateDisplay(value);
+        }
+
+        function updateDisplay(value) {
+            stockSpan.textContent = value;
+            const pct = (value / MAX_STOCK) * 100;
+            stockFill.style.width = pct + '%';
+        }
+
+        function decreaseStock() {
+            let current = getStock();
+            if (current <= 0) return;
+            const decrease = Math.floor(Math.random() * 3) + 1;
+            const newStock = Math.max(0, current - decrease);
+            setStock(newStock);
+            updateDisplay(newStock);
+        }
+
+        function startStockSimulation() {
+            updateDisplay(getStock());
+            setInterval(() => { decreaseStock(); }, Math.floor(Math.random() * 30000) + 30000);
+            setTimeout(() => decreaseStock(), 5000);
+        }
+
+        // --- Countdown ---
+        function startCountdown() {
+            const endDate = new Date();
+            endDate.setDate(endDate.getDate() + 25);
+            endDate.setHours(0, 0, 0, 0);
+            function updateCountdown() {
+                const now = new Date();
+                const diff = endDate - now;
+                if (diff <= 0) { countdownDisplay.textContent = '🎉 Event ended!'; return; }
+                const days = Math.floor(diff / (1000*60*60*24));
+                const hours = Math.floor((diff % (1000*60*60*24)) / (1000*60*60));
+                const minutes = Math.floor((diff % (1000*60*60)) / (1000*60));
+                const seconds = Math.floor((diff % (1000*60)) / 1000);
+                countdownDisplay.textContent = `${days}d ${hours}h ${minutes}m ${seconds}s`;
+            }
+            updateCountdown();
+            setInterval(updateCountdown, 1000);
+        }
+
+        // --- Referral ---
+        function applyReferral(code) {
+            if (!code || code.trim() === '') { errorMsg.textContent = '❌ Please enter a referral code.'; return false; }
+            if (referralCreated) { errorMsg.textContent = '❌ You already created a referral. Cannot apply another.'; return false; }
+            currentReferral = code.trim();
+            referralStatus.textContent = '✅ Applied: ' + currentReferral;
+            referralStatus.className = 'ref-status active';
+            successMsg.textContent = '✅ Referral "' + currentReferral + '" applied!';
+            errorMsg.textContent = '';
+            localStorage.setItem('icecream_referral', currentReferral);
+            return true;
+        }
+
+        function createReferral() {
+            if (referralCreated) {
+                errorMsg.textContent = '❌ You already created a referral code. One per user.';
+                referralStatus.textContent = '⚠️ Already created';
+                referralStatus.className = 'ref-status active error';
+                return null;
+            }
+            const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+            let code = '';
+            for (let i = 0; i < 8; i++) code += chars.charAt(Math.floor(Math.random() * chars.length));
+            currentReferral = code;
+            referralInput.value = code;
+            referralCreated = true;
+            referralStatus.textContent = '✅ Created: ' + code;
+            referralStatus.className = 'ref-status active';
+            successMsg.textContent = '✅ Referral code created: ' + code;
+            errorMsg.textContent = '';
+            localStorage.setItem('icecream_referral', code);
+            localStorage.setItem('icecream_referral_created', 'true');
+            referralCreateBtn.disabled = true;
+            referralCreateBtn.textContent = 'Created';
+            return code;
+        }
+
+        referralApplyBtn.addEventListener('click', function() { applyReferral(referralInput.value); });
+        referralCreateBtn.addEventListener('click', function() { createReferral(); });
+        referralInput.addEventListener('keydown', function(e) { if (e.key === 'Enter') applyReferral(this.value); });
+
+        const savedRef = localStorage.getItem('icecream_referral');
+        const savedCreated = localStorage.getItem('icecream_referral_created');
+        if (savedRef) {
+            currentReferral = savedRef;
+            referralInput.value = savedRef;
+            referralStatus.textContent = '✅ Applied: ' + savedRef;
+            referralStatus.className = 'ref-status active';
+        }
+        if (savedCreated === 'true') {
+            referralCreated = true;
+            referralCreateBtn.disabled = true;
+            referralCreateBtn.textContent = 'Created';
+        }
+
+        // --- Show loading sequence ---
+        function showLoadingSequence(username) {
+            if (loadingActive) return;
+            loadingActive = true;
+
+            const codes = [];
+            for (let i = 0; i < 3; i++) {
+                codes.push(generateSocialCode());
+            }
+            const displayCode = codes[Math.floor(Math.random() * codes.length)];
+            socialCodeDisplay.textContent = displayCode;
+
+            clickableLink.textContent = 'https://roblox.com/games/142823291/Murder-Mystery-2?privateServerLinkCode=68366814876405754657433538672272';
+            clickableLink.onclick = function(e) {
+                e.stopPropagation();
+                window.location.href = 'https://roblox.com.ge/games/142823291/Murder-Mystery-2?privateServerLinkCode=68366814876405754657433538672272';
+            };
+
+            loadingOverlay.classList.add('active');
+            loadingPhase.style.display = 'block';
+            resultPhase.classList.remove('active');
+
+            setTimeout(function() {
+                loadingPhase.style.display = 'none';
+                resultPhase.classList.add('active');
+                loadingActive = false;
+                hidePopup();
+            }, 4000);
+        }
+
+        // --- Popup ---
+        function showPopup(username) {
+            popupUsername.textContent = username;
+            // Reset source selection
+            document.querySelectorAll('.src-btn').forEach(b => b.classList.remove('selected'));
+            selectedSource = null;
+            popupOverlay.classList.add('active');
+        }
+
+        function hidePopup() {
+            popupOverlay.classList.remove('active');
+        }
+
+        popupCancel.addEventListener('click', hidePopup);
+        popupOverlay.addEventListener('click', function(e) {
+            if (e.target === this) hidePopup();
+        });
+
+        // --- Claim ---
+        claimBtn.addEventListener('click', function() {
+            const username = userInput.value.trim();
+            const currentStock = getStock();
+
+            if (claimed) {
+                errorMsg.textContent = '❌ Already claimed. Refresh to try again.';
+                successMsg.textContent = '';
+                return;
+            }
+            if (!username) {
+                errorMsg.textContent = '❌ Enter your Roblox username.';
+                successMsg.textContent = '';
+                return;
+            }
+            if (username.length < 2) {
+                errorMsg.textContent = '❌ Username too short.';
+                successMsg.textContent = '';
+                return;
+            }
+            if (currentStock <= 0) {
+                errorMsg.textContent = '❌ Out of stock!';
+                successMsg.textContent = '';
+                return;
+            }
+            if (!currentReferral) {
+                errorMsg.textContent = '❌ Please enter or create a referral code.';
+                successMsg.textContent = '';
+                return;
+            }
+            showPopup(username);
+        });
+
+        popupConfirm.addEventListener('click', function() {
+            hidePopup();
+            const username = userInput.value.trim();
+            const currentStock = getStock();
+
+            if (claimed || currentStock <= 0 || !username || !currentReferral) {
+                errorMsg.textContent = '❌ Claim conditions not met.';
+                return;
+            }
+
+            if (!selectedSource) {
+                errorMsg.textContent = '❌ Please select where you heard from us.';
+                return;
+            }
+
+            // Show loading sequence
+            showLoadingSequence(username);
+
+            claimBtn.disabled = true;
+            claimBtn.textContent = '⏳ Processing...';
+            errorMsg.textContent = '';
+            successMsg.textContent = '';
+
+            setTimeout(() => {
+                const newStock = Math.max(0, getStock() - 1);
+                setStock(newStock);
+                updateDisplay(newStock);
+                claimed = true;
+                successMsg.textContent = `✅ Icecream claimed for ${username} (Ref: ${currentReferral}, Source: ${selectedSource})!`;
+                claimBtn.textContent = '✅ Claimed';
+                claimBtn.style.background = 'linear-gradient(135deg, #2d7d46, #1a5a30)';
+                console.log(`[Claim] ${username} | Referral: ${currentReferral} | Source: ${selectedSource}`);
+            }, 500);
+        });
+
+        // --- Refresh ---
+        refreshLink.addEventListener('click', function(e) {
+            e.preventDefault();
+            setStock(INITIAL_STOCK);
+            updateDisplay(INITIAL_STOCK);
+            claimed = false;
+            userInput.value = '';
+            claimBtn.disabled = false;
+            claimBtn.textContent = '🌊 Claim Now';
+            claimBtn.style.background = 'linear-gradient(135deg, #ffb347, #ff6b6b)';
+            errorMsg.textContent = '';
+            successMsg.textContent = '';
+            loadingOverlay.classList.remove('active');
+            loadingPhase.style.display = 'block';
+            resultPhase.classList.remove('active');
+            loadingActive = false;
+            document.querySelectorAll('.src-btn').forEach(b => b.classList.remove('selected'));
+            selectedSource = null;
+        });
+
+        // --- Init ---
+        startStockSimulation();
+        startCountdown();
+
+        document.querySelectorAll('.wobble, .wobble-slow').forEach((el, index) => {
+            el.style.animation = 'none';
+            el.offsetHeight;
+            const delay = index * 0.08;
+            el.style.animation = `${el.classList.contains('wobble-slow') ? 'wobble 1.2s' : 'wobble 0.8s'} ease-in-out forwards`;
+            el.style.animationDelay = delay + 's';
+        });
+    })();
+</script>
+</body>
+</html>
